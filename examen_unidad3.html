@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <meta charset="UTF-8">
+	<title>Clase</title>
+	<style type="text/css">
+		.super_div{
+			width: 100%;
+			height: auto;
+			background-color: #D5D8DC;
+			background-image: url("img/background.jpg");
+			background-image: width: 100%;
+			color: white;
+			padding-bottom: 30px;
+		}
+		.mini_div{
+			width: 30%;
+			margin: 1%;
+			border-radius: 5px;
+			border-width: 1px;
+			border-style: solid;
+			border-color: black;
+			height: 300px;
+			float: left;
+		}
+		h1{
+			text-align: center;
+		}
+		input{
+			text-align: center;	
+		}
+		table{
+			width: 44%;
+			text-align: center;
+		}
+		td{
+			width: 33.33%
+		}
+		button {
+			margin-top: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="super_div">
+		<center class="">
+			<form id="formulario" style="align-content: center;">
+				<fieldset style="width: 40%;">
+					<legend>
+						<h2>Datos del usuario</h2>
+					</legend>
+					<label> Email: </label>
+					<input type="text" style="width: 100%;height: 40px;border: 0;padding: 0" name="email" id="email" value="" placeholder="">
+
+					<label>Contraseña</label>
+
+					<input type="text" style="width: 100%;height: 40px;border: 0;padding: 0" name="password" id="password" value="" placeholder="">
+
+					<label>Año de nacimiento</label>
+
+					<input type="text" style="width: 100%;height: 40px; border: 0;padding: 0" name="year" id="year" value="" placeholder="">
+
+					<button type="button" id="guardar_info"> Guardar registro </button>
+				</fieldset>
+			</form>
+			<h2>Usuarios registrados</h2>
+			<table border="1">
+				<thead>
+					<tr>
+						<td>
+							Email
+						</td>
+						<td>
+							Contraseña
+						</td>
+						<td>
+							Año de nacimiento
+						</td>
+					</tr>
+				</thead>
+				<tbody id="content_table">
+
+				</tbody>
+			</table>
+		</center>
+	</div>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+
+		$(window).on("load", function(){
+			updateTable()
+		})
+
+		$("#guardar_info").click(function(){
+			
+			var email = $("#email").val()
+			var password = $("#password").val()
+			var year = $("#year").val()
+
+			if (email != "" && password != "" && year != "") {
+
+				$.ajax({ 
+				    url : 'file.php', 
+				    data : {email:email, password:password, year:year}, 
+				    type : 'POST', 
+				    dataType : 'text', 
+				    success : function(r) {
+
+				    	alert("** Registro exitoso **")
+				 		$("#email").val("")
+						$("#password").val("")
+						$("#year").val("")
+						$("#content_table").empty()
+			    		$("#content_table").append(r)
+				        //console.log(r)  
+				    }, 
+				    error : function(xhr, status) {
+				        //console.log(xhr)
+				        //console.log(status)
+				    }, 
+				    complete : function(xhr, status) {
+				        //console.log(xhr)
+				        //console.log(status)
+				    }
+				})
+			}else {
+				alert("** Debes llenar todos los datos **")
+			}
+		})
+
+		function updateTable(){
+
+			$.get("file.php", function(r){
+				$("#content_table").empty()
+			    $("#content_table").append(r)
+			})
+		}
+	})
+	   
+</script>
+</body>
+</html>
